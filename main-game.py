@@ -1,5 +1,8 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import WindowProperties
+from panda3d.core import AmbientLight
+from panda3d.core import Vec4
+from panda3d.core import DirectionalLight
 from direct.actor.Actor import Actor
 
 class Game(ShowBase):
@@ -35,7 +38,21 @@ class Game(ShowBase):
         # Tilt the camera down by setting its pitch (the p in hpr)
         self.camera.setP(-90)
 
+        ambientLight = AmbientLight("ambient light")
+        ambientLight.setColor(Vec4(0.2, 0.2, 0.2, 1))
+        # Did this to get the node path since we created a node right above.
+        self.ambientLightNodePath = render.attachNewNode(ambientLight)
+        render.setLight(self.ambientLightNodePath)
 
+        mainLight = DirectionalLight("main light")
+        # Same thing here.
+        self.mainLightNodePath = render.attachNewNode(mainLight)
+        # Turn by 45 degrees, then tilt down by 45.
+        self.mainLightNodePath.setHpr(45, -45, 0)
+        render.setLight(self.mainLightNodePath)
+
+        # Applying a shader
+        render.setShaderAuto()
 
 game = Game()
 game.run()
