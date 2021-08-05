@@ -54,5 +54,28 @@ class Game(ShowBase):
         # Applying a shader
         render.setShaderAuto()
 
+        self.keyMap = {
+            "up": False,
+            "down": False,
+            "left": False,
+            "right": False,
+            "shoot": False
+        }
+               
+        self.accept("w", self.updateKeyMap, ["up", True])
+        self.accept("w-up", self.updateKeyMap, ["up", False])
+        self.accept("s", self.updateKeyMap, ["down", True])
+        self.accept("s-up", self.updateKeyMap, ["down", False])
+        self.accept("a", self.updateKeyMap, ["left", True])
+        self.accept("a-up", self.updateKeyMap, ["left", False])
+        self.accept("d", self.updateKeyMap, ["right", True])
+        self.accept("d-up", self.updateKeyMap, ["right", False])
+        self.accept("mouse1", self.updateKeyMap, ["shoot", True])
+        self.accept("mouse1-up", self.updateKeyMap, ["shoot", False])
+        
+    def updateKeyMap(self, controlName, controlState):
+            self.keyMap[controlName] = controlState
+            print(f"{controlName} set to {controlState}")
+
 game = Game()
 game.run()
