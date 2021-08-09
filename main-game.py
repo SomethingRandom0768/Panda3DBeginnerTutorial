@@ -3,6 +3,8 @@ from panda3d.core import WindowProperties
 from panda3d.core import AmbientLight
 from panda3d.core import Vec4, Vec3
 from panda3d.core import DirectionalLight
+from panda3d.core import CollisionTraverser, CollisionHandlerPusher, CollisionSphere, CollisionNode
+from panda3d.core import CollisionTube
 from direct.actor.Actor import Actor
 
 class Game(ShowBase):
@@ -77,6 +79,46 @@ class Game(ShowBase):
 
         self.updateTask = taskMgr.add(self.update, "update")
 
+        self.cTrav = CollisionTraverser()
+        self.pusher = CollisionHandlerPusher()
+
+        colliderNode = CollisionNode("player")
+
+        colliderNode.addSolid(CollisionSphere(0, 0, 0, 0.3))
+        collider = self.tempActor.attachNewNode(colliderNode)
+        collider.show()
+
+        base.pusher.addCollider(collider, self.tempActor)
+        base.cTrav.addCollider(collider, self.pusher)
+
+        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
+        wallNode = CollisionNode("wall")
+        wallNode.addSolid(wallSolid)
+        wall = render.attachNewNode(wallNode)
+        wall.show()
+        wall.setY(8.0)
+
+        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
+        wallNode = CollisionNode("wall")
+        wallNode.addSolid(wallSolid)
+        wall = render.attachNewNode(wallNode)
+        wall.show()
+        wall.setY(-8.0)
+
+        wallSolid = CollisionTube(0, -8.0, 0, 0, 8.0, 0, 0.2)
+        wallNode = CollisionNode("wall")
+        wallNode.addSolid(wallSolid)
+        wall = render.attachNewNode(wallNode)
+        wall.show()
+        wall.setX(8.0)
+
+        wallSolid = CollisionTube(0, -8.0, 0, 0, 8.0, 0, 0.2)
+        wallNode = CollisionNode("wall")
+        wallNode.addSolid(wallSolid)
+        wall = render.attachNewNode(wallNode)
+        wall.show()
+        wall.setX(-8.0)
+
     def update(self, task):
         dt = globalClock.getDt()
 
@@ -98,6 +140,7 @@ class Game(ShowBase):
     def updateKeyMap(self, controlName, controlState):
             self.keyMap[controlName] = controlState
             print(f"{controlName} set to {controlState}")
+        
 
 game = Game()
 game.run()
